@@ -87,7 +87,6 @@ def depthFirstSearch(problem):
     """
     frontier = util.Stack()
     frontier.push((problem.getStartStaet(),[],[]))
-
     while not frontier.isEmpty():
         node, actions, visited = frontier.pop()
         for coord, direction, steps in problem.getSuccessors(node):
@@ -108,7 +107,6 @@ def breadthFirstSearch(problem):
     visited = []
     while not frontier.isEmpty():
         node, actions = frontier.pop()
-
         for coord, direction, steps in problem.getSuccessors(node):
             if not coord in visited:
                 if problem.isGoalState(coord):
@@ -120,17 +118,16 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
-    "*** YOUR CODE HERE ***"
     frontier = util.PriorityQueue()
     frontier.push( (problem.getStartState(), []), 0)
-    explored = []
+    visited = []
     while not frontier.isEmpty():
         node, actions = frontier.pop()
         if problem.isGoalState(node):
             return actions
-        explored.append(node)
+        visited.append(node)
         for coord, direction, steps in problem.getSuccessors(node):
-            if not coord in explored:
+            if not coord in visited:
                 new_actions = actions + [direction]
                 frontier.push((coord, new_actions), problem.getCostOfActions(new_actions))
     return []
@@ -145,28 +142,21 @@ def nullHeuristic(state, problem=None):
 
 
 def aStarSearch(problem, heuristic=nullHeuristic):
-    "Search the node that has the lowest combined cost and heuristic first."
-    "*** YOUR CODE HERE ***"
-    
-    closedset = []
+    "Search the node that has the lowest combined cost and heuristic first."    
+    visited = []
     frontier = util.PriorityQueue()
     start = problem.getStartState()
-    frontier.push( (start, []), heuristic(start, problem))
-
+    frontier.push((start,[]), heuristic(start, problem))
     while not frontier.isEmpty():
         node, actions = frontier.pop()
-
         if problem.isGoalState(node):
             return actions
-
-        closedset.append(node)
-
+        visited.append(node)
         for coord, direction, cost in problem.getSuccessors(node):
-            if not coord in closedset:
+            if not coord in visited:
                 new_actions = actions + [direction]
                 score = problem.getCostOfActions(new_actions) + heuristic(coord, problem)
                 frontier.push( (coord, new_actions), score)
-
     return []
 
 
